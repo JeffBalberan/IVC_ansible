@@ -1,0 +1,21 @@
+---
+- name: Build image flask-app
+  hosts: serveurs
+  become: true
+  tasks:
+    - name: S'assurer que le SDK Docker Python est installé
+      package:
+        name: python3-pip
+        state: present
+
+    - name: Installer docker SDK avec pip
+      pip:
+        name: docker
+
+    - name: Build image flask-app
+      community.docker.docker_image:
+        name: flask-app
+        tag: latest
+        source: build
+        build:
+          path: /home/jbalberan/IVC_ansible/app

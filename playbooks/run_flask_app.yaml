@@ -1,0 +1,51 @@
+---
+- name: Lancer MySQL + Flask
+  hosts: serveurs
+  become: true
+  tasks:
+    - name: Supprimer le conteneur mysql s’il existe
+      community.docker.docker_container:
+        name: mysql
+        state: absent
+        force_kill: true
+
+    - name: Supprimer le conteneur flask-app s’il existe
+      community.docker.docker_container:
+        name: flask-app
+        state: absent
+        force_kill: true
+
+    - name: Lancer le conteneur MySQL
+      community.docker.docker_container:
+        name: mysql
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: appdb
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+        ports:
+          - "3306:3306"
+        volumes:
+          - mysql_data:/var/lib/mysql
+        restart_policy: always
+        state: started
+
+    - name: Attendre que MySQL soit prêt
+      wait_for:
+        port: 3306
+        host: 127.0.0.1
+        delay: 5
+        timeout: 60
+
+    - name: Lancer le conteneur flask-app
+      community.docker.docker_container:
+        name: flask-app
+        image: flask-app:latest
+        published_ports:
+          - "5000:5000"
+        links:
+          - mysql
+        restart_policy: always
+        state: started
+        working_dir: /app

@@ -1,0 +1,32 @@
+---
+- name: Cloner ou mettre à jour le dépôt GitHub privé
+  hosts: serveurs
+  become: yes
+  vars_prompt:
+    - name: github_username
+      prompt: "Entrez votre nom d'utilisateur GitHub"
+      private: no
+  tasks:
+    - name: Génération du fichier .gitconfig
+      ansible.builtin.template:
+        src: templates/gitconfig.j2
+        dest: /home/jbalberan/.gitconfig
+        owner: jbalberan
+        group: jbalberan
+        mode: '0644'
+
+    - name: S'assurer que Git est installé
+      ansible.builtin.package:
+        name: git
+        state: present
+
+    - name: Cloner ou mettre à jour le dépôt GitHub
+      ansible.builtin.git:
+        repo: https://github.com/vbouquetnanterre/IVC_ansible.git
+        dest: /home/jbalberan/IVC_ansible
+        version: main
+        update: yes
+        force: yes
+        accept_hostkey: yes
+        clone: yes
+      become_user: jbalberan

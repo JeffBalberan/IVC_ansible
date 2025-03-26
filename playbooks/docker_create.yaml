@@ -1,0 +1,12 @@
+---
+- name: Copier le Dockerfile dans le dossier app
+  hosts: serveurs
+  become: true
+  tasks:
+    - name: Créer le Dockerfile à partir d’un template
+      ansible.builtin.template:
+        src: templates/Dockerfile.j2
+        dest: /home/jbalberan/IVC_ansible/app/Dockerfile
+        owner: jbalberan
+        group: jbalberan
+        mode: '0644'

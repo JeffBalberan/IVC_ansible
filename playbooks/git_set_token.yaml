@@ -1,0 +1,25 @@
+---
+- hosts: serveurs
+  become: yes
+  vars_prompt:
+    - name: github_username
+      prompt: "Entrez votre nom d'utilisateur GitHub "
+      private: no
+    - name: github_token
+      prompt: "Entrez votre token GitHub "
+      private: yes
+  tasks:
+    - name: Copie .gitconfig
+      ansible.builtin.copy:
+        src: templates/gitconfig
+        dest: /home/jbalberan/.gitconfig
+        owner: jbalberan
+        group: jbalberan
+        mode: '0660'
+    - name: Configuration git-credentials
+      ansible.builtin.template:
+        src: templates/git-credentials.j2
+        dest: /home/jbalberan/.gitconfig
+        owner: jbalberan
+        group: jbalberan
+        mode: '0600'
