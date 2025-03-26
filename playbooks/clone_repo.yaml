@@ -22,8 +22,8 @@
 
     - name: Cloner ou mettre à jour le dépôt GitHub
       ansible.builtin.git:
-        repo: https://github.com/vbouquetnanterre/IVC_ansible.git
-        dest: /home/jbalberan/IVC_ansible
+        repo: https://github.com/JeffBalberan/IVC_ansible.git
+        dest: /home/jbalberan/IVC_ansible_v1
         version: main
         update: yes
         force: yes
