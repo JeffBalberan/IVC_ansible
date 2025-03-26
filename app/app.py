@@ -4,11 +4,12 @@ import mysql.connector
 app = Flask(__name__)
 
 db_config = {
-    'host': '127.0.0.1',
+    'host': 'mysql',
     'user': 'user',
     'password': 'password',
-    'database': 'appdb'
+    'database': 'tables.sql'
 }
+
 
 # Route pour enregistrer la tâche dans la base de données
 @app.route('/enregistrer_tache', methods=['POST'])
